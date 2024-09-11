@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Web GUI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="left-panel">
+            <h3>User Message</h3>
+            <textarea id="user_message" rows="10" placeholder="Enter your message"></textarea>
+        </div>
+
+        <div class="right-panel">
+            <h3>Prompt Message</h3>
+            <textarea id="prompt_message" rows="10" placeholder="Enter your prompt"></textarea>
+        </div>
+
+        <div class="bottom-panel">
+            <button id="submit_btn">Submit</button>
+            <div id="backend_message">
+                <h3>Backend Response:</h3>
+                <p>Waiting for input...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle the form submission and send data to the Flask backend
+        document.getElementById('submit_btn').addEventListener('click', function() {
+            let userMessage = document.getElementById('user_message').value;
+            let promptMessage = document.getElementById('prompt_message').value;
+
+            // Send data to the backend
+            fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `user_message=${userMessage}&prompt_message=${promptMessage}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the backend message on the page
+                document.getElementById('backend_message').innerHTML = `<h3>Backend Response:</h3><p>${data.backend_message}</p>`;
+            });
+        });
+    </script>
+
+</body>
+</html>
